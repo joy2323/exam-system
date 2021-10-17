@@ -14,6 +14,7 @@ class Question extends Model
         'question',
         'question_category',
         'options',
+        'assessment_id',
     ];
 
     protected $table = 'questions';

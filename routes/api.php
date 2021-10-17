@@ -29,6 +29,10 @@ Route::delete('delete/{assessment}',                                'App\Http\Co
 
 // For Question
 Route::post('question',                                                 'App\Http\Controllers\QuestionController@create');
+Route::get('questions',                                                  'App\Http\Controllers\QuestionController@index');
+
+//all questions by assessment id
+Route::get('get-assessment/{id}',                                                           'App\Http\Controllers\QuestionController@show');
 
 
 
