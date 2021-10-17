@@ -15,7 +15,7 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('assessment_id')->nullable();
+            $table->unsignedBigInteger('assessment_id');
             $table->string('question_category');
             $table->text('question');
             $table->json('options');

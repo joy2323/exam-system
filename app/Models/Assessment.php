@@ -10,6 +10,11 @@ class Assessment extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'description'
+    ];
+
     protected $table = 'assessments';
 
     public function question() {

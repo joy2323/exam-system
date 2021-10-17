@@ -19,11 +19,16 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-
+// For Assessment
 Route::post('assessment',                                           'App\Http\Controllers\AssessmentController@create');
 Route::get('assessments',                                           'App\Http\Controllers\AssessmentController@index');
 Route::get('assessment/{assessment}',                               'App\Http\Controllers\AssessmentController@showSingleAssessment');
 Route::put('update/{assessment}',                                   'App\Http\Controllers\AssessmentController@update');
 Route::delete('delete/{assessment}',                                'App\Http\Controllers\AssessmentController@destroy');
+
+
+// For Question
+Route::post('question',                                                 'App\Http\Controllers\QuestionController@create');
+
 
 

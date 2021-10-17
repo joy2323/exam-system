@@ -15,7 +15,10 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        //list all the question
+        $allQues = Question::all();
+            return response()->json($allQues);
+
     }
 
 
@@ -26,31 +29,56 @@ class QuestionController extends Controller
             'question' =>$request->question,
             'question_category' =>$request->question_category,
             'assessment_id'=>$request->assessment_id,
+            // 'options'   => ['Option 1', 'Option 2', 'Option 3', 'Option 4']
+            'options' =>$request->options,
         ]);
+        if ($createQuestion->save() );
+            return response()->json([
+                'status'=> '200',
+                'message'=>'Successful',
+                'result' => $createQuestion,
+            ]);
+
+            return response()->json([
+                'status'=> '500',
+                'message'=>'Action denied'
+            ]);
 
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
-     * Display the specified resource.
+     *  List all questions by assessment_id.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        //List all questions by assessment_id.
+
+        // $assessment = Assessment::whereId($id)->first();
+        // var_dump($assessment);
+        // $getSingleAssesQues = Question::where('assessment_id', $assessment->id)->get('question');
+
+        $getQuestByAssess = Assessment::whereId($id)->with('question')->first();
+
+        // dd($getQuestByAssess);
+
+        if($getQuestByAssess){
+            return response()->json([
+                "status"=>201,
+                "result"=>$getQuestByAssess
+            ]);
+        }else{
+            return response()->json([
+                "status"=>304,
+                "result"=>"Not Found"
+            ]);
+        }
+
+
     }
 
     /**
