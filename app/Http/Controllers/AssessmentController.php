@@ -114,7 +114,7 @@ class AssessmentController extends Controller
     {
         //to remove an assessment
         $assessment = Assessment::whereId($assessment)->first();
-        if($assessment->delete()){
+        if ($assessment->delete()){
             return response()->json([
                 'success'=>true,
                 'message'=>'Assessment was successfully deleted'],200);
