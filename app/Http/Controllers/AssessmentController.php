@@ -5,25 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Assessment;
-use App\Models\Question;
+use App\Http\Requests\Api\CreateQuestionRequest;
+use App\Http\Requests\Api\UpdateQuestionRequest;
+use App\Repositories\AssessmentRepository;
+use Exception;
 
 class AssessmentController extends Controller
 {
+    protected $repository;
+
+    public function __construct(AssessmentRepository $repository)
+    {
+        $this->repository = $repository;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // To show all the assessments
 
-        $allAssess = Assessment::all();
-            return response()->json($allAssess);
+        // $allAssess = Assessment::all();
+        // return response()->json($allAssess);
+
+
+        // $allAssess = $this->repository->paginate($request);
+        $allAssess = $this->repository->get($request);
+        return response()->json(['allAssess' => $allAssess]);
     }
 
 
-    public function create(Request $request)
+    public function create(createQuestionRequest $request)
     {
         // For Creating New Assessment
 
