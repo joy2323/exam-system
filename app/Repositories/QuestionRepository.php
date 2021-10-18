@@ -2,10 +2,11 @@
 namespace App\Repositories;
 
 use App\Models\Assessment;
+use App\Models\Question;
 use App\Repositories\AppRepository;
 use Illuminate\Http\Request;
 
-class AssessmentRepository extends AppRepository
+class QuestionRepository extends AppRepository
 {
     protected $model;
 
@@ -15,7 +16,7 @@ class AssessmentRepository extends AppRepository
     }
 
     /**
-     * set payload data for assessment table.
+     * set payload data for question table.
      *
      * @param Request $request [description]
      * @return array of data for saving.

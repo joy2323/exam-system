@@ -27,10 +27,6 @@ class AssessmentController extends Controller
     {
         // To show all the assessments
 
-        // $allAssess = Assessment::all();
-        // return response()->json($allAssess);
-
-
         // $allAssess = $this->repository->paginate($request);
         $allAssess = $this->repository->get($request);
         return response()->json(['allAssess' => $allAssess]);
@@ -39,24 +35,16 @@ class AssessmentController extends Controller
 
     public function create(createQuestionRequest $request)
     {
-        // For Creating New Assessment
+        // For Creating New Assessment data to database table
 
-        $createAssessment = Assessment::create([
-            'name' =>$request->name,
-            'description' =>$request->description,
-        ]);
-        if ($createAssessment->save()) {
-            return response()->json([
-                'status'=> '201',
-                'message' => 'Assessment added successfully !!'
-            ]);
-        } else {
-            return response()->json([
-                'status'=> '300',
-                'message'=>'Not successful'
 
-            ]);
+        try {
+            $createAssessment = $this->repository->store($request);
+            return response()->json(['createAssessment' => $createAssessment], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
+
     }
 
 
@@ -66,26 +54,17 @@ class AssessmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showSingleAssessment($assessment)
+    public function showSingleAssessment($id)
     {
         //to show a single assessment using 'id'
 
-        $getSingleAssess = Assessment::whereId($assessment)->first();
-        if(!$getSingleAssess){
-            return response()->json([
-             'status'=> 404,
-             'message' => 'This Assessment is not found in the database'
-            ]);
+
+        try {
+            $getSingleAssess = $this->repository->show($id);
+            return response()->json(['getSingleAssessment' => $getSingleAssess], 201);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-        return response()->json([
-            'status'=> 200,
-             'message' => 'Successful',
-             'result' => [
-                 'Id'=>$getSingleAssess->id,
-                 'name'=>$getSingleAssess->name,
-                 'description'=>$getSingleAssess->description,
-             ]
-        ]);
     }
 
 
@@ -100,19 +79,11 @@ class AssessmentController extends Controller
     {
         //Update a specified assessment
 
-        $updateAssessment=Assessment::whereId($id)->first();
-        $updateAssessment->name=$request->name;
-        $updateAssessment->description=$request->description;
-        if ($updateAssessment->save()){
-            return response()->json([
-                'status'=> 200,
-                'message'=> 'Assessment successfully Updated !!'
-                ]);
-        }else{
-            return response()->json([
-                'status'=> '500',
-                'message'=> 'Assessment has not been Updated'
-            ]);
+        try {
+            $updateAssessment = $this->repository->update($id, $request);
+            return response()->json(['item' => $updateAssessment], 200);
+        } catch (Exception $e) {
+           return response()->json(['message' => $e->getMessage()], 500);
         }
 
 
@@ -124,20 +95,16 @@ class AssessmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($assessment)
+    public function destroy($id)
     {
         //to remove an assessment
-        $assessment = Assessment::whereId($assessment)->first();
-        if ($assessment->delete()){
-            return response()->json([
-                'success'=>true,
-                'message'=>'Assessment was successfully deleted'],200);
-            }else{
-                    return response()->json([
-                   'success'=>false,
-                   'message'=>'Assessment details not deleted',
-               ], 500);
-            }
+
+        try {
+            $this->repository->delete($id);
+            return response()->json(['User deleted !!'], 204);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
 
     }
 }
