@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Assessment;
-use App\Http\Requests\Api\CreateQuestionRequest;
-use App\Http\Requests\Api\UpdateQuestionRequest;
+use App\Http\Requests\Api\CreateAssessmentRequest;
 use App\Repositories\AssessmentRepository;
 use Exception;
 
@@ -33,7 +32,7 @@ class AssessmentController extends Controller
     }
 
 
-    public function create(createQuestionRequest $request)
+    public function create(createAssessmentRequest $request)
     {
         // For Creating New Assessment data to database table
 
@@ -81,7 +80,7 @@ class AssessmentController extends Controller
 
         try {
             $updateAssessment = $this->repository->update($id, $request);
-            return response()->json(['item' => $updateAssessment], 200);
+            return response()->json(['updateAssessment' => $updateAssessment], 200);
         } catch (Exception $e) {
            return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -101,7 +100,7 @@ class AssessmentController extends Controller
 
         try {
             $this->repository->delete($id);
-            return response()->json(['User deleted !!'], 204);
+            return response()->json(true,'Assessment was deleted successfully',[],'',200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

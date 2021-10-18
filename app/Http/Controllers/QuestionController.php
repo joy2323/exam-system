@@ -6,43 +6,45 @@ use Illuminate\Http\Request;
 use App\Models\Assessment;
 use App\Models\Question;
 
+use App\Http\Requests\Api\CreateQuestionRequest;
+use App\Repositories\QuestionRepository;
+use Exception;
+
 class QuestionController extends Controller
 {
+    protected $repository;
+
+
+    public function __construct(QuestionRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the question.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //list all the question
-        $allQues = Question::all();
-            return response()->json($allQues);
+        //list all the questions
+
+        $allQues = $this->repository->get($request);
+        return response()->json(['allQuestions' => $allQues]);
 
     }
 
 
-    public function create(Request $request)
+    public function create(CreateQuestionRequest $request)
     {
         //for creating a new question.
-        $createQuestion = Question::create([
-            'question' =>$request->question,
-            'question_category' =>$request->question_category,
-            'assessment_id'=>$request->assessment_id,
-            // 'options'   => ['Option 1', 'Option 2', 'Option 3', 'Option 4']
-            'options' =>$request->options,
-        ]);
-        if ($createQuestion->save() );
-            return response()->json([
-                'status'=> '200',
-                'message'=>'Successful',
-                'result' => $createQuestion,
-            ]);
 
-            return response()->json([
-                'status'=> '500',
-                'message'=>'Action denied'
-            ]);
+        try {
+            $createQuestion = $this->repository->store($request);
+            return response()->json(['createQuestion' => $createQuestion], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
 
 
     }
@@ -58,9 +60,6 @@ class QuestionController extends Controller
     {
         //List all questions by assessment_id.
 
-        // $assessment = Assessment::whereId($id)->first();
-        // var_dump($assessment);
-        // $getSingleAssesQues = Question::where('assessment_id', $assessment->id)->get('question');
 
         $getQuestByAssess = Assessment::whereId($id)->with('question')->first();
 

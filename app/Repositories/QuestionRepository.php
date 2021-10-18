@@ -10,7 +10,7 @@ class QuestionRepository extends AppRepository
 {
     protected $model;
 
-    public function __construct(Assessment $model)
+    public function __construct(Question $model)
     {
         $this->model = $model;
     }
@@ -24,8 +24,10 @@ class QuestionRepository extends AppRepository
     protected function setDataPayload(Request $request)
     {
         return [
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
+            'question' => $request->input('question'),
+            'question_category' => $request->input('question_category'),
+            'assessment_id' => $request->input('assessment_id'),
+            'options' => $request->input('options'),
         ];
     }
 }
